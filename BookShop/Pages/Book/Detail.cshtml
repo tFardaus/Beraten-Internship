@@ -1,0 +1,24 @@
+@page
+@model BookShop.Pages.Book.DetailModel
+@{
+    ViewData["Title"] = "Book Details";
+}
+
+<h1>Book Details</h1>
+<hr />
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Book.BookTitle)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Book.BookTitle)</dd>
+
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Book.BookAuthor)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Book.BookAuthor)</dd>
+
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Book.BookDescription)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Book.BookDescription)</dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.Book.BookId" class="btn btn-primary">Edit</a>
+    <a asp-page="./Index" class="btn btn-secondary">Back to List</a>
+</div>
