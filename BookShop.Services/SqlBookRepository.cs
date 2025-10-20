@@ -14,12 +14,20 @@ namespace BookShop.Services
 
         public IEnumerable<Book> GetAllBook()
         {
-            return _context.Books.ToList();
+            return _context.Books
+                .Include(b => b.Author)
+                .Include(b => b.Category)
+                .Include(b => b.Publisher)
+                .ToList();
         }
 
         public Book? GetBookById(int id)
         {
-            return _context.Books.Find(id);
+            return _context.Books
+                .Include(b => b.Author)
+                .Include(b => b.Category)
+                .Include(b => b.Publisher)
+                .FirstOrDefault(b => b.BookId == id);
         }
 
         public void AddBook(Book book)

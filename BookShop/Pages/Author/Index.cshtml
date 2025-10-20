@@ -1,0 +1,31 @@
+@page
+@model BookShop.Pages.Author.IndexModel
+@{
+    ViewData["Title"] = "Authors";
+}
+
+<h1>Authors List</h1>
+<hr />
+<a asp-page="Create" class="btn btn-success float-end">Create</a>
+<table class="table table-responsive table-striped table-hover align-middle">
+    <thead>
+        <tr class="text-center">
+            <th>Name</th>
+            <th>Biography</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var author in Model.Authors)
+        {
+            <tr class="text-center">
+                <td>@author.Name</td>
+                <td>@author.Biography</td>
+                <td>
+                    <a asp-page="Edit" asp-route-id="@author.AuthorId" class="btn btn-sm btn-primary">Edit</a>
+                    <a asp-page="Delete" asp-route-id="@author.AuthorId" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

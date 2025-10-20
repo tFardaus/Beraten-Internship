@@ -10,9 +10,12 @@
 <table class="table table-responsive table-striped table-hover align-middle">
     <thead>
         <tr class="text-center">
-            <th>@Html.DisplayNameFor(model => model.Books[0].BookTitle)</th>
-            <th>@Html.DisplayNameFor(model => model.Books[0].BookDescription)</th>
-            <th>@Html.DisplayNameFor(model => model.Books[0].BookAuthor)</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Category</th>
+            <th>Publisher</th>
+            <th>Price</th>
+            <th>Stock</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -20,13 +23,16 @@
         @foreach (var book in Model.Books)
         {
             <tr class="text-center">
-                <td>@Html.DisplayFor(model => book.BookTitle)</td>
-                <td>@Html.DisplayFor(model => book.BookDescription)</td>
-                <td>@Html.DisplayFor(model => book.BookAuthor)</td>
+                <td>@book.BookTitle</td>
+                <td>@book.Author?.Name</td>
+                <td>@book.Category?.Name</td>
+                <td>@book.Publisher?.Name</td>
+                <td>@book.Price tk</td>
+                <td>@book.Stock</td>
                 <td>
-                    <a asp-page="./Edit" asp-route-id="@book.BookId" class="btn btn-primary">Edit</a>
-                    <a asp-page="./Detail" asp-route-id="@book.BookId" class="btn btn-success">Details</a>
-                    <a asp-page="./Delete" asp-route-id="@book.BookId" class="btn btn-danger">Delete</a>
+                    <a asp-page="./Edit" asp-route-id="@book.BookId" class="btn btn-sm btn-primary">Edit</a>
+                    <a asp-page="./Detail" asp-route-id="@book.BookId" class="btn btn-sm btn-success">Details</a>
+                    <a asp-page="./Delete" asp-route-id="@book.BookId" class="btn btn-sm btn-danger">Delete</a>
                 </td>
             </tr>
         }

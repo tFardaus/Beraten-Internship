@@ -1,0 +1,49 @@
+@page
+@model BookShop.Pages.Publisher.DeleteModel
+@{
+    ViewData["Title"] = "Delete Publisher";
+}
+
+<h1>Delete Publisher</h1>
+<h3>Are you sure you want to delete this?</h3>
+<hr />
+<div id="message" class="alert" style="display:none;"></div>
+<div id="publisherDetails">
+    <dl class="row">
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Publisher.Name)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Publisher.Name)</dd>
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Publisher.Address)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Publisher.Address)</dd>
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Publisher.Phone)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Publisher.Phone)</dd>
+    </dl>
+    <form id="deletePublisherForm" method="post">
+        <input type="hidden" asp-for="Publisher.PublisherId" id="publisherId" />
+        <input type="submit" value="Delete" class="btn btn-danger" />
+        <a asp-page="./Index" class="btn btn-secondary">Back to List</a>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#deletePublisherForm').on('submit', function(e) {
+                e.preventDefault();
+                var publisherId = $('#publisherId').val();
+                $.ajax({
+                    url: '/api/publishers/' + publisherId,
+                    type: 'DELETE',
+                    success: function(response) {
+                        $('#publisherDetails').hide();
+                        $('#message').removeClass('alert-danger').addClass('alert-success')
+                            .text(response.message + ' Redirecting...').show();
+                        setTimeout(function() { window.location.href = '/Publisher/Index'; }, 1500);
+                    },
+                    error: function() {
+                        $('#message').removeClass('alert-success').addClass('alert-danger').text('Error deleting publisher.').show();
+                    }
+                });
+            });
+        });
+    </script>
+}

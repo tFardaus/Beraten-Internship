@@ -1,0 +1,35 @@
+@page
+@model BookShop.Pages.Customer.IndexModel
+@{
+    ViewData["Title"] = "Customers";
+}
+
+<h1>Customers List</h1>
+<hr />
+<a asp-page="Create" class="btn btn-success float-end">Create</a>
+<table class="table table-responsive table-striped table-hover align-middle">
+    <thead>
+        <tr class="text-center">
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var customer in Model.Customers)
+        {
+            <tr class="text-center">
+                <td>@customer.Name</td>
+                <td>@customer.Email</td>
+                <td>@customer.Phone</td>
+                <td>@customer.Address</td>
+                <td>
+                    <a asp-page="Edit" asp-route-id="@customer.CustomerId" class="btn btn-sm btn-primary">Edit</a>
+                    <a asp-page="Delete" asp-route-id="@customer.CustomerId" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -6,17 +6,24 @@ namespace BookShop.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BooksController : ControllerBase
+    public class OrdersController : ControllerBase
     {
-        private readonly IBookRepository _bookRepository;
+        private readonly IOrderRepository _orderRepository;
 
-        public BooksController(IBookRepository bookRepository)
+        public OrdersController(IOrderRepository orderRepository)
         {
-            _bookRepository = bookRepository;
+            _orderRepository = orderRepository;
+        }
+
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            var orders = _orderRepository.GetAllOrders();
+            return Ok(orders);
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] Book book)
+        public IActionResult Create([FromBody] Order order)
         {
             if (!ModelState.IsValid)
             {
@@ -26,8 +33,8 @@ namespace BookShop.Controllers
 
             try
             {
-                _bookRepository.AddBook(book);
-                return Ok(new { success = true, message = "Book created successfully!" });
+                _orderRepository.AddOrder(order);
+                return Ok(new { success = true, message = "Order created successfully!" });
             }
             catch (Exception ex)
             {
@@ -36,23 +43,23 @@ namespace BookShop.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] Book book)
+        public IActionResult Update(int id, [FromBody] Order order)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            book.BookId = id;
-            _bookRepository.UpdateBook(book);
-            return Ok(new { success = true, message = "Book updated successfully!" });
+            order.OrderId = id;
+            _orderRepository.UpdateOrder(order);
+            return Ok(new { success = true, message = "Order updated successfully!" });
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            _bookRepository.DeleteBook(id);
-            return Ok(new { success = true, message = "Book deleted successfully!" });
+            _orderRepository.DeleteOrder(id);
+            return Ok(new { success = true, message = "Order deleted successfully!" });
         }
     }
 }

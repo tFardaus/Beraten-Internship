@@ -19,6 +19,23 @@ namespace BookShop.Models
         public string BookDescription { get; set; } = string.Empty;
 
         [Required]
-        public string BookAuthor { get; set; } = string.Empty;
+        public decimal Price { get; set; }
+
+        public int Stock { get; set; }
+
+        // Foreign Keys
+        [Required]
+        public int AuthorId { get; set; }
+        public Author? Author { get; set; }
+
+        [Required]
+        public int CategoryId { get; set; }
+        public Category? Category { get; set; }
+
+        [Required]
+        public int PublisherId { get; set; }
+        public Publisher? Publisher { get; set; }
+
+        public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
     }
 }

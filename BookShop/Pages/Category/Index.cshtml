@@ -1,0 +1,31 @@
+@page
+@model BookShop.Pages.Category.IndexModel
+@{
+    ViewData["Title"] = "Categories";
+}
+
+<h1>Categories List</h1>
+<hr />
+<a asp-page="Create" class="btn btn-success float-end">Create</a>
+<table class="table table-responsive table-striped table-hover align-middle">
+    <thead>
+        <tr class="text-center">
+            <th>Name</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var category in Model.Categories)
+        {
+            <tr class="text-center">
+                <td>@category.Name</td>
+                <td>@category.Description</td>
+                <td>
+                    <a asp-page="Edit" asp-route-id="@category.CategoryId" class="btn btn-sm btn-primary">Edit</a>
+                    <a asp-page="Delete" asp-route-id="@category.CategoryId" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

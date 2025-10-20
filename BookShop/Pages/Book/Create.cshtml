@@ -16,14 +16,29 @@
                 <span asp-validation-for="Book.BookTitle" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Book.BookAuthor" class="control-label"></label>
-                <input asp-for="Book.BookAuthor" class="form-control" />
-                <span asp-validation-for="Book.BookAuthor" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Book.BookDescription" class="control-label"></label>
                 <textarea asp-for="Book.BookDescription" class="form-control"></textarea>
                 <span asp-validation-for="Book.BookDescription" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Book.AuthorId" class="control-label">Author</label>
+                <select asp-for="Book.AuthorId" class="form-control" asp-items="Model.Authors"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Book.CategoryId" class="control-label">Category</label>
+                <select asp-for="Book.CategoryId" class="form-control" asp-items="Model.Categories"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Book.PublisherId" class="control-label">Publisher</label>
+                <select asp-for="Book.PublisherId" class="form-control" asp-items="Model.Publishers"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Book.Price" class="control-label"></label>
+                <input asp-for="Book.Price" class="form-control" type="number" step="0.01" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Book.Stock" class="control-label"></label>
+                <input asp-for="Book.Stock" class="form-control" type="number" />
             </div>
             <div class="form-group mt-3">
                 <input type="submit" value="Create" class="btn btn-primary" />
@@ -41,9 +56,15 @@
                 
                 var bookData = {
                     bookTitle: $('#Book_BookTitle').val(),
-                    bookAuthor: $('#Book_BookAuthor').val(),
-                    bookDescription: $('#Book_BookDescription').val()
+                    bookDescription: $('#Book_BookDescription').val(),
+                    authorId: parseInt($('#Book_AuthorId').val()) || 0,
+                    categoryId: parseInt($('#Book_CategoryId').val()) || 0,
+                    publisherId: parseInt($('#Book_PublisherId').val()) || 0,
+                    price: parseFloat($('#Book_Price').val()) || 0,
+                    stock: parseInt($('#Book_Stock').val()) || 0
                 };
+                
+                console.log('Sending data:', bookData);
                 
                 $.ajax({
                     url: '/api/books',
@@ -56,8 +77,12 @@
                         $('#createBookForm')[0].reset();
                     },
                     error: function(xhr) {
+                        var errorMsg = 'Failed to create book. Please check all fields.';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMsg = xhr.responseJSON.message;
+                        }
                         $('#message').removeClass('alert-success').addClass('alert-danger')
-                            .text('Error creating book. Please check all fields.').show();
+                            .text(errorMsg).show();
                     }
                 });
             });

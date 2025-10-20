@@ -1,0 +1,67 @@
+@page
+@model BookShop.Pages.Order.CreateModel
+@{
+    ViewData["Title"] = "Create Order";
+}
+
+<h1>Create Order</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <div id="message" class="alert" style="display:none;"></div>
+        <form id="createOrderForm" method="post">
+            <div class="form-group">
+                <label asp-for="Order.CustomerId" class="control-label">Customer</label>
+                <select asp-for="Order.CustomerId" class="form-control" asp-items="Model.Customers"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Order.OrderDate" class="control-label"></label>
+                <input asp-for="Order.OrderDate" class="form-control" type="date" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Order.TotalAmount" class="control-label"></label>
+                <input asp-for="Order.TotalAmount" class="form-control" type="number" step="0.01" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Order.Status" class="control-label"></label>
+                <input asp-for="Order.Status" class="form-control" />
+            </div>
+            <div class="form-group mt-3">
+                <input type="submit" value="Create" class="btn btn-primary" />
+                <a asp-page="Index" class="btn btn-secondary">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#createOrderForm').on('submit', function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: '/api/orders',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        customerId: parseInt($('#Order_CustomerId').val()),
+                        orderDate: $('#Order_OrderDate').val(),
+                        totalAmount: parseFloat($('#Order_TotalAmount').val()),
+                        status: $('#Order_Status').val()
+                    }),
+                    success: function(response) {
+                        $('#message').removeClass('alert-danger').addClass('alert-success').text(response.message).show();
+                        $('#createOrderForm')[0].reset();
+                    },
+                    error: function(xhr) {
+                        var errorMsg = 'Error creating order.';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMsg = xhr.responseJSON.message;
+                        }
+                        $('#message').removeClass('alert-success').addClass('alert-danger').text(errorMsg).show();
+                    }
+                });
+            });
+        });
+    </script>
+}

@@ -11,6 +11,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
 builder.Services.AddScoped<IBookRepository, SqlBookRepository>();
+builder.Services.AddScoped<IAuthorRepository, SqlAuthorRepository>();
+builder.Services.AddScoped<ICategoryRepository, SqlCategoryRepository>();
+builder.Services.AddScoped<IPublisherRepository, SqlPublisherRepository>();
+builder.Services.AddScoped<ICustomerRepository, SqlCustomerRepository>();
+builder.Services.AddScoped<IOrderRepository, SqlOrderRepository>();
 
 var app = builder.Build();
 

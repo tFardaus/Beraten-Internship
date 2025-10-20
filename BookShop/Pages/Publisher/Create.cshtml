@@ -1,0 +1,58 @@
+@page
+@model BookShop.Pages.Publisher.CreateModel
+@{
+    ViewData["Title"] = "Create Publisher";
+}
+
+<h1>Create Publisher</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <div id="message" class="alert" style="display:none;"></div>
+        <form id="createPublisherForm" method="post">
+            <div class="form-group">
+                <label asp-for="Publisher.Name" class="control-label"></label>
+                <input asp-for="Publisher.Name" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Publisher.Address" class="control-label"></label>
+                <input asp-for="Publisher.Address" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Publisher.Phone" class="control-label"></label>
+                <input asp-for="Publisher.Phone" class="form-control" />
+            </div>
+            <div class="form-group mt-3">
+                <input type="submit" value="Create" class="btn btn-primary" />
+                <a asp-page="Index" class="btn btn-secondary">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#createPublisherForm').on('submit', function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: '/api/publishers',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        name: $('#Publisher_Name').val(),
+                        address: $('#Publisher_Address').val(),
+                        phone: $('#Publisher_Phone').val()
+                    }),
+                    success: function(response) {
+                        $('#message').removeClass('alert-danger').addClass('alert-success').text(response.message).show();
+                        $('#createPublisherForm')[0].reset();
+                    },
+                    error: function() {
+                        $('#message').removeClass('alert-success').addClass('alert-danger').text('Error creating publisher.').show();
+                    }
+                });
+            });
+        });
+    </script>
+}

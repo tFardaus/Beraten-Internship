@@ -17,9 +17,9 @@
                 <span asp-validation-for="Book.BookTitle" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Book.BookAuthor" class="control-label"></label>
-                <input asp-for="Book.BookAuthor" class="form-control" />
-                <span asp-validation-for="Book.BookAuthor" class="text-danger"></span>
+                <label asp-for="Book.Author" class="control-label"></label>
+                <input asp-for="Book.Author" class="form-control" />
+                <span asp-validation-for="Book.Author" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Book.BookDescription" class="control-label"></label>
@@ -57,8 +57,12 @@
                             .text(response.message).show();
                     },
                     error: function(xhr) {
+                        var errorMsg = 'Failed to update book. Please check all fields.';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMsg = xhr.responseJSON.message;
+                        }
                         $('#message').removeClass('alert-success').addClass('alert-danger')
-                            .text('Error updating book. Please check all fields.').show();
+                            .text(errorMsg).show();
                     }
                 });
             });
