@@ -8,8 +8,9 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form method="post">
-            <input type="hidden" asp-for="Book.BookId" />
+        <div id="message" class="alert" style="display:none;"></div>
+        <form id="editBookForm" method="post">
+            <input type="hidden" asp-for="Book.BookId" id="bookId" />
             <div class="form-group">
                 <label asp-for="Book.BookTitle" class="control-label"></label>
                 <input asp-for="Book.BookTitle" class="form-control" />
@@ -32,3 +33,35 @@
         </form>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#editBookForm').on('submit', function(e) {
+                e.preventDefault();
+                
+                var bookId = $('#bookId').val();
+                var bookData = {
+                    bookTitle: $('#Book_BookTitle').val(),
+                    bookAuthor: $('#Book_BookAuthor').val(),
+                    bookDescription: $('#Book_BookDescription').val()
+                };
+                
+                $.ajax({
+                    url: '/api/books/' + bookId,
+                    type: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify(bookData),
+                    success: function(response) {
+                        $('#message').removeClass('alert-danger').addClass('alert-success')
+                            .text(response.message).show();
+                    },
+                    error: function(xhr) {
+                        $('#message').removeClass('alert-success').addClass('alert-danger')
+                            .text('Error updating book. Please check all fields.').show();
+                    }
+                });
+            });
+        });
+    </script>
+}
