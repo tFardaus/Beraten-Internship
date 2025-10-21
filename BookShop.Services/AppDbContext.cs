@@ -17,12 +17,13 @@ namespace BookShop.Services
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<AuthorWithBooksDto> AuthorWithBooksResults { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configure relationships without cascade delete to avoid conflicts
+            // Configure relationships
             modelBuilder.Entity<Book>()
                 .HasOne(b => b.Author)
                 .WithMany(a => a.Books)
@@ -40,6 +41,8 @@ namespace BookShop.Services
                 .WithMany(p => p.Books)
                 .HasForeignKey(b => b.PublisherId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<AuthorWithBooksDto>().HasNoKey();
         }
     }
 }

@@ -13,10 +13,20 @@ namespace BookShop.Pages.Customer
         }
 
         public List<Models.Customer> Customers { get; set; } = new();
+        public string SearchTerm { get; set; } = string.Empty;
 
-        public void OnGet()
+        public void OnGet(string searchTerm)
         {
-            Customers = _customerRepository.GetAllCustomers().ToList();
+            SearchTerm = searchTerm ?? string.Empty;
+            
+            if (string.IsNullOrWhiteSpace(searchTerm))
+            {
+                Customers = _customerRepository.GetAllCustomers().ToList();
+            }
+            else
+            {
+                Customers = _customerRepository.SearchCustomers(searchTerm).ToList();
+            }
         }
     }
 }

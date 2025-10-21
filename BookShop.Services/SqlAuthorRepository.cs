@@ -17,6 +17,14 @@ namespace BookShop.Services
             return _context.Authors.Include(a => a.Books).ToList();
         }
 
+        public IEnumerable<Author> SearchAuthors(string searchTerm)
+        {
+            return _context.Authors
+                .Include(a => a.Books)
+                .Where(a => a.Name.Contains(searchTerm))
+                .ToList();
+        }
+
         public Author? GetAuthorById(int id)
         {
             return _context.Authors.Include(a => a.Books).FirstOrDefault(a => a.AuthorId == id);
@@ -42,6 +50,14 @@ namespace BookShop.Services
                 _context.Authors.Remove(author);
                 _context.SaveChanges();
             }
+        }
+
+        public IEnumerable<AuthorWithBooksDto> GetAuthorWithBooks(int authorId)
+        {
+            return _context.AuthorWithBooksResults
+                .FromSqlRaw<AuthorWithBooksDto>(" GetAuthorWithBooks {0}", authorId)
+                .ToList();
+               
         }
     }
 }

@@ -14,10 +14,20 @@ namespace BookShop.Pages.Category
         }
 
         public List<Models.Category> Categories { get; set; } = new List<Models.Category>();
+        public string SearchTerm { get; set; } = string.Empty;
 
-        public void OnGet()
+        public void OnGet(string searchTerm)
         {
-            Categories = _categoryRepository.GetAllCategories().ToList();
+            SearchTerm = searchTerm ?? string.Empty;
+            
+            if (string.IsNullOrWhiteSpace(searchTerm))
+            {
+                Categories = _categoryRepository.GetAllCategories().ToList();
+            }
+            else
+            {
+                Categories = _categoryRepository.SearchCategories(searchTerm).ToList();
+            }
         }
     }
 }

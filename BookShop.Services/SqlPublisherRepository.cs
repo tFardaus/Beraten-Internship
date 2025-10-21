@@ -17,6 +17,14 @@ namespace BookShop.Services
             return _context.Publishers.Include(p => p.Books).ToList();
         }
 
+        public IEnumerable<Publisher> SearchPublishers(string searchTerm)
+        {
+            return _context.Publishers
+                .Include(p => p.Books)
+                .Where(p => p.Name.Contains(searchTerm))
+                .ToList();
+        }
+
         public Publisher? GetPublisherById(int id)
         {
             return _context.Publishers.Include(p => p.Books).FirstOrDefault(p => p.PublisherId == id);

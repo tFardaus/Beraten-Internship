@@ -17,6 +17,14 @@ namespace BookShop.Services
             return _context.Categories.Include(c => c.Books).ToList();
         }
 
+        public IEnumerable<Category> SearchCategories(string searchTerm)
+        {
+            return _context.Categories
+                .Include(c => c.Books)
+                .Where(c => c.Name.Contains(searchTerm))
+                .ToList();
+        }
+
         public Category? GetCategoryById(int id)
         {
             return _context.Categories.Include(c => c.Books).FirstOrDefault(c => c.CategoryId == id);

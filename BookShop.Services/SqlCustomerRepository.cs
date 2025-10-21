@@ -17,6 +17,14 @@ namespace BookShop.Services
             return _context.Customers.Include(c => c.Orders).ToList();
         }
 
+        public IEnumerable<Customer> SearchCustomers(string searchTerm)
+        {
+            return _context.Customers
+                .Include(c => c.Orders)
+                .Where(c => c.Name.Contains(searchTerm))
+                .ToList();
+        }
+
         public Customer? GetCustomerById(int id)
         {
             return _context.Customers.Include(c => c.Orders).FirstOrDefault(c => c.CustomerId == id);

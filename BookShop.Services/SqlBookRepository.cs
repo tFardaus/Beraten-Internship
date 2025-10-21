@@ -21,6 +21,16 @@ namespace BookShop.Services
                 .ToList();
         }
 
+        public IEnumerable<Book> SearchBooks(string searchTerm)
+        {
+            return _context.Books
+                .Include(b => b.Author)
+                .Include(b => b.Category)
+                .Include(b => b.Publisher)
+                .Where(b => b.BookTitle.Contains(searchTerm))
+                .ToList();
+        }
+
         public Book? GetBookById(int id)
         {
             return _context.Books

@@ -14,10 +14,20 @@ namespace BookShop.Pages.Author
         }
 
         public List<Models.Author> Authors { get; set; } = new List<Models.Author>();
+        public string SearchTerm { get; set; } = string.Empty;
 
-        public void OnGet()
+        public void OnGet(string searchTerm)
         {
-            Authors = _authorRepository.GetAllAuthors().ToList();
+            SearchTerm = searchTerm ?? string.Empty;
+            
+            if (string.IsNullOrWhiteSpace(searchTerm))
+            {
+                Authors = _authorRepository.GetAllAuthors().ToList();
+            }
+            else
+            {
+                Authors = _authorRepository.SearchAuthors(searchTerm).ToList();
+            }
         }
     }
 }
