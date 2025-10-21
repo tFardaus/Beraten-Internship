@@ -30,6 +30,28 @@ namespace BookShop.Services
                 .FirstOrDefault(b => b.BookId == id);
         }
 
+        public BookDetailsDto? GetBookDetails(int id)
+        {
+            return _context.Books
+                .Where(b => b.BookId == id)
+                .Select(b => new BookDetailsDto
+                {
+                    BookId = b.BookId,
+                    BookTitle = b.BookTitle,
+                    BookDescription = b.BookDescription,
+                    Price = b.Price,
+                    Stock = b.Stock,
+                    AuthorName = b.Author!.Name,
+                    AuthorBiography = b.Author.Biography,
+                    PublisherName = b.Publisher!.Name,
+                    PublisherAddress = b.Publisher.Address,
+                    PublisherPhone = b.Publisher.Phone,
+                    CategoryName = b.Category!.Name,
+                    CategoryDescription = b.Category.Description
+                })
+                .FirstOrDefault();
+        }
+
         public void AddBook(Book book)
         {
             _context.Books.Add(book);

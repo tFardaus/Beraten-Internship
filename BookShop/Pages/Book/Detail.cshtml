@@ -6,19 +6,69 @@
 
 <h1>Book Details</h1>
 <hr />
-<div>
-    <dl class="row">
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Book.BookTitle)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Book.BookTitle)</dd>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Book.Author)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Book.Author)</dd>
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-3">
+            <div class="card-header bg-primary text-white">
+                <h4>Book Information</h4>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">Title</dt>
+                    <dd class="col-sm-9">@Model.BookDetails.BookTitle</dd>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Book.BookDescription)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Book.BookDescription)</dd>
-    </dl>
+                    <dt class="col-sm-3">Description</dt>
+                    <dd class="col-sm-9">@Model.BookDetails.BookDescription</dd>
+
+                    <dt class="col-sm-3">Price</dt>
+                    <dd class="col-sm-9">@Model.BookDetails.Price tk</dd>
+
+                    <dt class="col-sm-3">Stock</dt>
+                    <dd class="col-sm-9">@Model.BookDetails.Stock</dd>
+
+                    <dt class="col-sm-3">Category</dt>
+                    <dd class="col-sm-9">@Model.BookDetails.CategoryName</dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header bg-success text-white">
+                <h4>Author Information</h4>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">Name</dt>
+                    <dd class="col-sm-9">@Model.BookDetails.AuthorName</dd>
+
+                    <dt class="col-sm-3">Biography</dt>
+                    <dd class="col-sm-9">@Model.BookDetails.AuthorBiography</dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header bg-info text-white">
+                <h4>Publisher Information</h4>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">Name</dt>
+                    <dd class="col-sm-9">@Model.BookDetails.PublisherName</dd>
+
+                    <dt class="col-sm-3">Address</dt>
+                    <dd class="col-sm-9">@Model.BookDetails.PublisherAddress</dd>
+
+                    <dt class="col-sm-3">Phone</dt>
+                    <dd class="col-sm-9">@Model.BookDetails.PublisherPhone</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
 </div>
-<div>
-    <a asp-page="./Edit" asp-route-id="@Model.Book.BookId" class="btn btn-primary">Edit</a>
+
+<div class="mt-3">
+    <a asp-page="./Edit" asp-route-id="@Model.BookDetails.BookId" class="btn btn-primary">Edit</a>
     <a asp-page="./Index" class="btn btn-secondary">Back to List</a>
 </div>

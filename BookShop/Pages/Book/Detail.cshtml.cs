@@ -14,7 +14,7 @@ namespace BookShop.Pages.Book
             _bookRepository = bookRepository;
         }
 
-        public Models.Book Book { get; set; } = new Models.Book();
+        public BookDetailsDto BookDetails { get; set; } = new BookDetailsDto();
 
         public IActionResult OnGet(int? id)
         {
@@ -23,13 +23,13 @@ namespace BookShop.Pages.Book
                 return RedirectToPage("./Index");
             }
 
-            var book = _bookRepository.GetBookById(id.Value);
-            if (book == null)
+            var bookDetails = _bookRepository.GetBookDetails(id.Value);
+            if (bookDetails == null)
             {
                 return RedirectToPage("./Index");
             }
 
-            Book = book;
+            BookDetails = bookDetails;
             return Page();
         }
     }
