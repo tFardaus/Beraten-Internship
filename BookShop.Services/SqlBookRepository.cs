@@ -12,37 +12,37 @@ namespace BookShop.Services
             _context = context;
         }
 
-        public IEnumerable<Book> GetAllBook()
+        public async Task<IEnumerable<Book>> GetAllBookAsync()
         {
-            return _context.Books
+            return await _context.Books.AsNoTracking()
                 .Include(b => b.Author)
                 .Include(b => b.Category)
                 .Include(b => b.Publisher)
-                .ToList();
+                .ToListAsync();
         }
 
-        public IEnumerable<Book> SearchBooks(string searchTerm)
+        public async Task<IEnumerable<Book>> SearchBooksAsync(string searchTerm)
         {
-            return _context.Books
+            return await _context.Books.AsNoTracking()
                 .Include(b => b.Author)
                 .Include(b => b.Category)
                 .Include(b => b.Publisher)
                 .Where(b => b.BookTitle.Contains(searchTerm))
-                .ToList();
+                .ToListAsync();
         }
 
-        public Book? GetBookById(int id)
+        public async Task<Book?> GetBookByIdAsync(int id)
         {
-            return _context.Books
+            return await _context.Books.AsNoTracking()
                 .Include(b => b.Author)
                 .Include(b => b.Category)
                 .Include(b => b.Publisher)
-                .FirstOrDefault(b => b.BookId == id);
+                .FirstOrDefaultAsync(b => b.BookId == id);
         }
 
-        public BookDetailsDto? GetBookDetails(int id)
+        public async Task<BookDetailsDto?> GetBookDetailsAsync(int id)
         {
-            return _context.Books
+            return await _context.Books.AsNoTracking()
                 .Where(b => b.BookId == id)
                 .Select(b => new BookDetailsDto
                 {
@@ -59,28 +59,28 @@ namespace BookShop.Services
                     CategoryName = b.Category!.Name,
                     CategoryDescription = b.Category.Description
                 })
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
         }
 
-        public void AddBook(Book book)
+        public async Task AddBookAsync(Book book)
         {
             _context.Books.Add(book);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void UpdateBook(Book book)
+        public async Task UpdateBookAsync(Book book)
         {
             _context.Books.Update(book);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void DeleteBook(int id)
+        public async Task DeleteBookAsync(int id)
         {
-            var book = _context.Books.Find(id);
+            var book = await _context.Books.FindAsync(id);
             if (book != null)
             {
                 _context.Books.Remove(book);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
     }

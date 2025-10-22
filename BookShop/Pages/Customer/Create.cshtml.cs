@@ -18,10 +18,15 @@ namespace BookShop.Pages.Customer
 
         public IActionResult OnGet() => Page();
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid) return Page();
-            _customerRepository.AddCustomer(Customer);
+            if (!ModelState.IsValid)
+            {
+                TempData["ErrorMessage"] = "Please fix the errors in the form.";
+                return Page();
+            }
+            await _customerRepository.AddCustomerAsync(Customer);
+            TempData["SuccessMessage"] = "Customer created successfully!";
             return RedirectToPage("./Index");
         }
     }

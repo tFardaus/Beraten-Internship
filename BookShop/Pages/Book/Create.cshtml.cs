@@ -29,25 +29,27 @@ namespace BookShop.Pages.Book
         public SelectList Categories { get; set; }
         public SelectList Publishers { get; set; }
 
-        public IActionResult OnGet()
+        public async Task<IActionResult> OnGetAsync()
         {
-            Authors = new SelectList(_authorRepository.GetAllAuthors(), "AuthorId", "Name");
-            Categories = new SelectList(_categoryRepository.GetAllCategories(), "CategoryId", "Name");
-            Publishers = new SelectList(_publisherRepository.GetAllPublishers(), "PublisherId", "Name");
+            Authors = new SelectList(await _authorRepository.GetAllAuthorsAsync(), "AuthorId", "Name");
+            Categories = new SelectList(await _categoryRepository.GetAllCategoriesAsync(), "CategoryId", "Name");
+            Publishers = new SelectList(await _publisherRepository.GetAllPublishersAsync(), "PublisherId", "Name");
             return Page();
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
-                Authors = new SelectList(_authorRepository.GetAllAuthors(), "AuthorId", "Name");
-                Categories = new SelectList(_categoryRepository.GetAllCategories(), "CategoryId", "Name");
-                Publishers = new SelectList(_publisherRepository.GetAllPublishers(), "PublisherId", "Name");
+                TempData["ErrorMessage"] = "Please fix the errors in the form.";
+                Authors = new SelectList(await _authorRepository.GetAllAuthorsAsync(), "AuthorId", "Name");
+                Categories = new SelectList(await _categoryRepository.GetAllCategoriesAsync(), "CategoryId", "Name");
+                Publishers = new SelectList(await _publisherRepository.GetAllPublishersAsync(), "PublisherId", "Name");
                 return Page();
             }
 
-            _bookRepository.AddBook(Book);
+            await _bookRepository.AddBookAsync(Book);
+            TempData["SuccessMessage"] = "Book created successfully!";
             return RedirectToPage("./Index");
         }
     }

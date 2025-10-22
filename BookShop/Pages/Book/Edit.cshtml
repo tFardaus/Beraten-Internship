@@ -8,8 +8,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <div id="message" class="alert" style="display:none;"></div>
-        <form id="editBookForm" method="post">
+        <form method="post">
             <input type="hidden" asp-for="Book.BookId" id="bookId" />
             <div class="form-group">
                 <label asp-for="Book.BookTitle" class="control-label"></label>
@@ -50,41 +49,5 @@
 </div>
 
 @section Scripts {
-    <script>
-        $(document).ready(function() {
-            $('#editBookForm').on('submit', function(e) {
-                e.preventDefault();
-                
-                var bookId = $('#bookId').val();
-                var bookData = {
-                    bookTitle: $('#Book_BookTitle').val(),
-                    bookDescription: $('#Book_BookDescription').val(),
-                    authorId: parseInt($('#Book_AuthorId').val()) || 0,
-                    categoryId: parseInt($('#Book_CategoryId').val()) || 0,
-                    publisherId: parseInt($('#Book_PublisherId').val()) || 0,
-                    price: parseFloat($('#Book_Price').val()) || 0,
-                    stock: parseInt($('#Book_Stock').val()) || 0
-                };
-                
-                $.ajax({
-                    url: '/api/books/' + bookId,
-                    type: 'PUT',
-                    contentType: 'application/json',
-                    data: JSON.stringify(bookData),
-                    success: function(response) {
-                        $('#message').removeClass('alert-danger').addClass('alert-success')
-                            .text(response.message).show();
-                    },
-                    error: function(xhr) {
-                        var errorMsg = 'Failed to update book. Please check all fields.';
-                        if (xhr.responseJSON && xhr.responseJSON.message) {
-                            errorMsg = xhr.responseJSON.message;
-                        }
-                        $('#message').removeClass('alert-success').addClass('alert-danger')
-                            .text(errorMsg).show();
-                    }
-                });
-            });
-        });
-    </script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

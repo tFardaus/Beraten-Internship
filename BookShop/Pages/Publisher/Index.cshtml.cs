@@ -15,17 +15,17 @@ namespace BookShop.Pages.Publisher
         public List<Models.Publisher> Publishers { get; set; } = new();
         public string SearchTerm { get; set; } = string.Empty;
 
-        public void OnGet(string searchTerm)
+        public async Task OnGetAsync(string searchTerm)
         {
             SearchTerm = searchTerm ?? string.Empty;
             
             if (string.IsNullOrWhiteSpace(searchTerm))
             {
-                Publishers = _publisherRepository.GetAllPublishers().ToList();
+                Publishers = (await _publisherRepository.GetAllPublishersAsync()).ToList();
             }
             else
             {
-                Publishers = _publisherRepository.SearchPublishers(searchTerm).ToList();
+                Publishers = (await _publisherRepository.SearchPublishersAsync(searchTerm)).ToList();
             }
         }
     }

@@ -16,14 +16,14 @@ namespace BookShop.Pages.Book
 
         public BookDetailsDto BookDetails { get; set; } = new BookDetailsDto();
 
-        public IActionResult OnGet(int? id)
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
             {
                 return RedirectToPage("./Index");
             }
 
-            var bookDetails = _bookRepository.GetBookDetails(id.Value);
+            var bookDetails = await _bookRepository.GetBookDetailsAsync(id.Value);
             if (bookDetails == null)
             {
                 return RedirectToPage("./Index");

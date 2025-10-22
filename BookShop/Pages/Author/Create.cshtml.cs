@@ -22,14 +22,16 @@ namespace BookShop.Pages.Author
             return Page();
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
+                TempData["ErrorMessage"] = "Please fix the errors in the form.";
                 return Page();
             }
 
-            _authorRepository.AddAuthor(Author);
+            await _authorRepository.AddAuthorAsync(Author);
+            TempData["SuccessMessage"] = "Author created successfully!";
             return RedirectToPage("./Index");
         }
     }

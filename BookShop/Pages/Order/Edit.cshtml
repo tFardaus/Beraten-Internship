@@ -8,8 +8,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <div id="message" class="alert" style="display:none;"></div>
-        <form id="editOrderForm" method="post">
+        <form method="post">
             <input type="hidden" asp-for="Order.OrderId" id="orderId" />
             <div class="form-group">
                 <label asp-for="Order.CustomerId" class="control-label">Customer</label>
@@ -36,29 +35,5 @@
 </div>
 
 @section Scripts {
-    <script>
-        $(document).ready(function() {
-            $('#editOrderForm').on('submit', function(e) {
-                e.preventDefault();
-                var orderId = $('#orderId').val();
-                $.ajax({
-                    url: '/api/orders/' + orderId,
-                    type: 'PUT',
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        customerId: parseInt($('#Order_CustomerId').val()),
-                        orderDate: $('#Order_OrderDate').val(),
-                        totalAmount: parseFloat($('#Order_TotalAmount').val()),
-                        status: $('#Order_Status').val()
-                    }),
-                    success: function(response) {
-                        $('#message').removeClass('alert-danger').addClass('alert-success').text(response.message).show();
-                    },
-                    error: function() {
-                        $('#message').removeClass('alert-success').addClass('alert-danger').text('Error updating order.').show();
-                    }
-                });
-            });
-        });
-    </script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

@@ -16,7 +16,7 @@ namespace BookShop.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] Book book)
+        public async Task<IActionResult> Create([FromBody] Book book)
         {
             if (!ModelState.IsValid)
             {
@@ -26,7 +26,7 @@ namespace BookShop.Controllers
 
             try
             {
-                _bookRepository.AddBook(book);
+                await _bookRepository.AddBookAsync(book);
                 return Ok(new { success = true, message = "Book created successfully!" });
             }
             catch (Exception ex)
@@ -36,7 +36,7 @@ namespace BookShop.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] Book book)
+        public async Task<IActionResult> Update(int id, [FromBody] Book book)
         {
             if (!ModelState.IsValid)
             {
@@ -44,14 +44,14 @@ namespace BookShop.Controllers
             }
 
             book.BookId = id;
-            _bookRepository.UpdateBook(book);
+            await _bookRepository.UpdateBookAsync(book);
             return Ok(new { success = true, message = "Book updated successfully!" });
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            _bookRepository.DeleteBook(id);
+            await _bookRepository.DeleteBookAsync(id);
             return Ok(new { success = true, message = "Book deleted successfully!" });
         }
     }

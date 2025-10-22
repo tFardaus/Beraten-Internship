@@ -1,0 +1,23 @@
+@model IEnumerable<dynamic>
+
+<div class="card">
+    <div class="card-header bg-success text-white">
+        <h5 class="mb-0">Books count by Category</h5>
+    </div>
+    <ul class="list-group list-group-flush">
+        @if (Model.Any())
+        {
+            @foreach (var item in Model)
+            {
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    @item.CategoryName
+                    <span class="badge bg-primary rounded-pill">@item.BookCount</span>
+                </li>
+            }
+        }
+        else
+        {
+            <li class="list-group-item text-muted">No categories available</li>
+        }
+    </ul>
+</div>

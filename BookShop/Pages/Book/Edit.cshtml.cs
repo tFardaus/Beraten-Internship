@@ -29,37 +29,39 @@ namespace BookShop.Pages.Book
         public SelectList Categories { get; set; }
         public SelectList Publishers { get; set; }
 
-        public IActionResult OnGet(int? id)
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
             {
                 return RedirectToPage("./Index");
             }
 
-            var book = _bookRepository.GetBookById(id.Value);
+            var book = await _bookRepository.GetBookByIdAsync(id.Value);
             if (book == null)
             {
                 return RedirectToPage("./Index");
             }
 
             Book = book;
-            Authors = new SelectList(_authorRepository.GetAllAuthors(), "AuthorId", "Name");
-            Categories = new SelectList(_categoryRepository.GetAllCategories(), "CategoryId", "Name");
-            Publishers = new SelectList(_publisherRepository.GetAllPublishers(), "PublisherId", "Name");
+            Authors = new SelectList(await _authorRepository.GetAllAuthorsAsync(), "AuthorId", "Name");
+            Categories = new SelectList(await _categoryRepository.GetAllCategoriesAsync(), "CategoryId", "Name");
+            Publishers = new SelectList(await _publisherRepository.GetAllPublishersAsync(), "PublisherId", "Name");
             return Page();
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
-                Authors = new SelectList(_authorRepository.GetAllAuthors(), "AuthorId", "Name");
-                Categories = new SelectList(_categoryRepository.GetAllCategories(), "CategoryId", "Name");
-                Publishers = new SelectList(_publisherRepository.GetAllPublishers(), "PublisherId", "Name");
+                TempData["ErrorMessage"] = "Please fix the errors in the form.";
+                Authors = new SelectList(await _authorRepository.GetAllAuthorsAsync(), "AuthorId", "Name");
+                Categories = new SelectList(await _categoryRepository.GetAllCategoriesAsync(), "CategoryId", "Name");
+                Publishers = new SelectList(await _publisherRepository.GetAllPublishersAsync(), "PublisherId", "Name");
                 return Page();
             }
 
-            _bookRepository.UpdateBook(Book);
+            await _bookRepository.UpdateBookAsync(Book);
+            TempData["SuccessMessage"] = "Book updated successfully!";
             return RedirectToPage("./Index");
         }
     }

@@ -16,26 +16,26 @@ namespace BookShop.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var categories = _categoryRepository.GetAllCategories();
+            var categories = await _categoryRepository.GetAllCategoriesAsync();
             return Ok(categories);
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] Category category)
+        public async Task<IActionResult> Create([FromBody] Category category)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _categoryRepository.AddCategory(category);
+            await _categoryRepository.AddCategoryAsync(category);
             return Ok(new { success = true, message = "Category created successfully!" });
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] Category category)
+        public async Task<IActionResult> Update(int id, [FromBody] Category category)
         {
             if (!ModelState.IsValid)
             {
@@ -43,14 +43,14 @@ namespace BookShop.Controllers
             }
 
             category.CategoryId = id;
-            _categoryRepository.UpdateCategory(category);
+            await _categoryRepository.UpdateCategoryAsync(category);
             return Ok(new { success = true, message = "Category updated successfully!" });
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            _categoryRepository.DeleteCategory(id);
+            await _categoryRepository.DeleteCategoryAsync(id);
             return Ok(new { success = true, message = "Category deleted successfully!" });
         }
     }

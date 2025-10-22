@@ -64,8 +64,6 @@
                     stock: parseInt($('#Book_Stock').val()) || 0
                 };
                 
-                console.log('Sending data:', bookData);
-                
                 $.ajax({
                     url: '/api/books',
                     type: 'POST',

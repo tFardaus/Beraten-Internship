@@ -12,43 +12,43 @@ namespace BookShop.Services
             _context = context;
         }
 
-        public IEnumerable<Customer> GetAllCustomers()
+        public async Task<IEnumerable<Customer>> GetAllCustomersAsync()
         {
-            return _context.Customers.Include(c => c.Orders).ToList();
+            return await _context.Customers.AsNoTracking().Include(c => c.Orders).ToListAsync();
         }
 
-        public IEnumerable<Customer> SearchCustomers(string searchTerm)
+        public async Task<IEnumerable<Customer>> SearchCustomersAsync(string searchTerm)
         {
-            return _context.Customers
+            return await _context.Customers.AsNoTracking()
                 .Include(c => c.Orders)
                 .Where(c => c.Name.Contains(searchTerm))
-                .ToList();
+                .ToListAsync();
         }
 
-        public Customer? GetCustomerById(int id)
+        public async Task<Customer?> GetCustomerByIdAsync(int id)
         {
-            return _context.Customers.Include(c => c.Orders).FirstOrDefault(c => c.CustomerId == id);
+            return await _context.Customers.AsNoTracking().Include(c => c.Orders).FirstOrDefaultAsync(c => c.CustomerId == id);
         }
 
-        public void AddCustomer(Customer customer)
+        public async Task AddCustomerAsync(Customer customer)
         {
             _context.Customers.Add(customer);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void UpdateCustomer(Customer customer)
+        public async Task UpdateCustomerAsync(Customer customer)
         {
             _context.Customers.Update(customer);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void DeleteCustomer(int id)
+        public async Task DeleteCustomerAsync(int id)
         {
-            var customer = _context.Customers.Find(id);
+            var customer = await _context.Customers.FindAsync(id);
             if (customer != null)
             {
                 _context.Customers.Remove(customer);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
     }

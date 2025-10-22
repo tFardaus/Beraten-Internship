@@ -16,26 +16,26 @@ namespace BookShop.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var customers = _customerRepository.GetAllCustomers();
+            var customers = await _customerRepository.GetAllCustomersAsync();
             return Ok(customers);
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] Customer customer)
+        public async Task<IActionResult> Create([FromBody] Customer customer)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _customerRepository.AddCustomer(customer);
+            await _customerRepository.AddCustomerAsync(customer);
             return Ok(new { success = true, message = "Customer created successfully!" });
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] Customer customer)
+        public async Task<IActionResult> Update(int id, [FromBody] Customer customer)
         {
             if (!ModelState.IsValid)
             {
@@ -43,14 +43,14 @@ namespace BookShop.Controllers
             }
 
             customer.CustomerId = id;
-            _customerRepository.UpdateCustomer(customer);
+            await _customerRepository.UpdateCustomerAsync(customer);
             return Ok(new { success = true, message = "Customer updated successfully!" });
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            _customerRepository.DeleteCustomer(id);
+            await _customerRepository.DeleteCustomerAsync(id);
             return Ok(new { success = true, message = "Customer deleted successfully!" });
         }
     }

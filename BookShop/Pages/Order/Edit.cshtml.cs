@@ -21,24 +21,26 @@ namespace BookShop.Pages.Order
 
         public SelectList Customers { get; set; }
 
-        public IActionResult OnGet(int? id)
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null) return RedirectToPage("./Index");
-            var order = _orderRepository.GetOrderById(id.Value);
+            var order = await _orderRepository.GetOrderByIdAsync(id.Value);
             if (order == null) return RedirectToPage("./Index");
             Order = order;
-            Customers = new SelectList(_customerRepository.GetAllCustomers(), "CustomerId", "Name");
+            Customers = new SelectList(await _customerRepository.GetAllCustomersAsync(), "CustomerId", "Name");
             return Page();
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
-                Customers = new SelectList(_customerRepository.GetAllCustomers(), "CustomerId", "Name");
+                TempData["ErrorMessage"] = "Please fix the errors in the form.";
+                Customers = new SelectList(await _customerRepository.GetAllCustomersAsync(), "CustomerId", "Name");
                 return Page();
             }
-            _orderRepository.UpdateOrder(Order);
+            await _orderRepository.UpdateOrderAsync(Order);
+            TempData["SuccessMessage"] = "Order updated successfully!";
             return RedirectToPage("./Index");
         }
     }

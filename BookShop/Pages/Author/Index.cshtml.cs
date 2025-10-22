@@ -16,17 +16,17 @@ namespace BookShop.Pages.Author
         public List<Models.Author> Authors { get; set; } = new List<Models.Author>();
         public string SearchTerm { get; set; } = string.Empty;
 
-        public void OnGet(string searchTerm)
+        public async Task OnGetAsync(string searchTerm)
         {
             SearchTerm = searchTerm ?? string.Empty;
             
             if (string.IsNullOrWhiteSpace(searchTerm))
             {
-                Authors = _authorRepository.GetAllAuthors().ToList();
+                Authors = (await _authorRepository.GetAllAuthorsAsync()).ToList();
             }
             else
             {
-                Authors = _authorRepository.SearchAuthors(searchTerm).ToList();
+                Authors = (await _authorRepository.SearchAuthorsAsync(searchTerm)).ToList();
             }
         }
     }

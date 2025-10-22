@@ -12,43 +12,43 @@ namespace BookShop.Services
             _context = context;
         }
 
-        public IEnumerable<Category> GetAllCategories()
+        public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
         {
-            return _context.Categories.Include(c => c.Books).ToList();
+            return await _context.Categories.AsNoTracking().Include(c => c.Books).ToListAsync();
         }
 
-        public IEnumerable<Category> SearchCategories(string searchTerm)
+        public async Task<IEnumerable<Category>> SearchCategoriesAsync(string searchTerm)
         {
-            return _context.Categories
+            return await _context.Categories.AsNoTracking()
                 .Include(c => c.Books)
                 .Where(c => c.Name.Contains(searchTerm))
-                .ToList();
+                .ToListAsync();
         }
 
-        public Category? GetCategoryById(int id)
+        public async Task<Category?> GetCategoryByIdAsync(int id)
         {
-            return _context.Categories.Include(c => c.Books).FirstOrDefault(c => c.CategoryId == id);
+            return await _context.Categories.AsNoTracking().Include(c => c.Books).FirstOrDefaultAsync(c => c.CategoryId == id);
         }
 
-        public void AddCategory(Category category)
+        public async Task AddCategoryAsync(Category category)
         {
             _context.Categories.Add(category);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void UpdateCategory(Category category)
+        public async Task UpdateCategoryAsync(Category category)
         {
             _context.Categories.Update(category);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void DeleteCategory(int id)
+        public async Task DeleteCategoryAsync(int id)
         {
-            var category = _context.Categories.Find(id);
+            var category = await _context.Categories.FindAsync(id);
             if (category != null)
             {
                 _context.Categories.Remove(category);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
     }

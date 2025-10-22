@@ -16,26 +16,26 @@ namespace BookShop.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var authors = _authorRepository.GetAllAuthors();
+            var authors = await _authorRepository.GetAllAuthorsAsync();
             return Ok(authors);
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] Author author)
+        public async Task<IActionResult> Create([FromBody] Author author)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _authorRepository.AddAuthor(author);
+            await _authorRepository.AddAuthorAsync(author);
             return Ok(new { success = true, message = "Author created successfully!" });
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] Author author)
+        public async Task<IActionResult> Update(int id, [FromBody] Author author)
         {
             if (!ModelState.IsValid)
             {
@@ -43,14 +43,14 @@ namespace BookShop.Controllers
             }
 
             author.AuthorId = id;
-            _authorRepository.UpdateAuthor(author);
+            await _authorRepository.UpdateAuthorAsync(author);
             return Ok(new { success = true, message = "Author updated successfully!" });
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            _authorRepository.DeleteAuthor(id);
+            await _authorRepository.DeleteAuthorAsync(id);
             return Ok(new { success = true, message = "Author deleted successfully!" });
         }
     }

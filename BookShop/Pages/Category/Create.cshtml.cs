@@ -22,10 +22,15 @@ namespace BookShop.Pages.Category
             return Page();
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid) return Page();
-            _categoryRepository.AddCategory(Category);
+            if (!ModelState.IsValid)
+            {
+                TempData["ErrorMessage"] = "Please fix the errors in the form.";
+                return Page();
+            }
+            await _categoryRepository.AddCategoryAsync(Category);
+            TempData["SuccessMessage"] = "Category created successfully!";
             return RedirectToPage("./Index");
         }
     }

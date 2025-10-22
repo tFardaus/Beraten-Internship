@@ -16,18 +16,19 @@ namespace BookShop.Pages.Order
         [BindProperty]
         public Models.Order Order { get; set; } = new();
 
-        public IActionResult OnGet(int? id)
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null) return RedirectToPage("./Index");
-            var order = _orderRepository.GetOrderById(id.Value);
+            var order = await _orderRepository.GetOrderByIdAsync(id.Value);
             if (order == null) return RedirectToPage("./Index");
             Order = order;
             return Page();
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
-            _orderRepository.DeleteOrder(Order.OrderId);
+            await _orderRepository.DeleteOrderAsync(Order.OrderId);
+            TempData["SuccessMessage"] = "Order deleted successfully!";
             return RedirectToPage("./Index");
         }
     }

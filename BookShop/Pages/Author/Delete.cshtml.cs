@@ -17,14 +17,14 @@ namespace BookShop.Pages.Author
         [BindProperty]
         public Models.Author Author { get; set; } = new Models.Author();
 
-        public IActionResult OnGet(int? id)
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
             {
                 return RedirectToPage("./Index");
             }
 
-            var author = _authorRepository.GetAuthorById(id.Value);
+            var author = await _authorRepository.GetAuthorByIdAsync(id.Value);
             if (author == null)
             {
                 return RedirectToPage("./Index");
@@ -34,9 +34,10 @@ namespace BookShop.Pages.Author
             return Page();
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
-            _authorRepository.DeleteAuthor(Author.AuthorId);
+            await _authorRepository.DeleteAuthorAsync(Author.AuthorId);
+            TempData["SuccessMessage"] = "Author deleted successfully!";
             return RedirectToPage("./Index");
         }
     }

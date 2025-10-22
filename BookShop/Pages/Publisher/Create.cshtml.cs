@@ -18,10 +18,15 @@ namespace BookShop.Pages.Publisher
 
         public IActionResult OnGet() => Page();
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid) return Page();
-            _publisherRepository.AddPublisher(Publisher);
+            if (!ModelState.IsValid)
+            {
+                TempData["ErrorMessage"] = "Please fix the errors in the form.";
+                return Page();
+            }
+            await _publisherRepository.AddPublisherAsync(Publisher);
+            TempData["SuccessMessage"] = "Publisher created successfully!";
             return RedirectToPage("./Index");
         }
     }

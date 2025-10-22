@@ -4,10 +4,10 @@ namespace BookShop.Services
 {
     public interface IOrderRepository
     {
-        IEnumerable<Order> GetAllOrders();
-        Order? GetOrderById(int id);
-        void AddOrder(Order order);
-        void UpdateOrder(Order order);
-        void DeleteOrder(int id);
+        Task<IEnumerable<Order>> GetAllOrdersAsync();
+        Task<Order?> GetOrderByIdAsync(int id);
+        Task AddOrderAsync(Order order);
+        Task UpdateOrderAsync(Order order);
+        Task DeleteOrderAsync(int id);
     }
 }

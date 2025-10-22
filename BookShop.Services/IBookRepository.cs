@@ -4,12 +4,12 @@ namespace BookShop.Services
 {
     public interface IBookRepository
     {
-        IEnumerable<Book> GetAllBook();
-        IEnumerable<Book> SearchBooks(string searchTerm);
-        Book? GetBookById(int id);
-        BookDetailsDto? GetBookDetails(int id);
-        void AddBook(Book book);
-        void UpdateBook(Book book);
-        void DeleteBook(int id);
+        Task<IEnumerable<Book>> GetAllBookAsync();
+        Task<IEnumerable<Book>> SearchBooksAsync(string searchTerm);
+        Task<Book?> GetBookByIdAsync(int id);
+        Task<BookDetailsDto?> GetBookDetailsAsync(int id);
+        Task AddBookAsync(Book book);
+        Task UpdateBookAsync(Book book);
+        Task DeleteBookAsync(int id);
     }
 }

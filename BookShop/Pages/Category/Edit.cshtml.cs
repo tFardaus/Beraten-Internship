@@ -16,19 +16,24 @@ namespace BookShop.Pages.Category
         [BindProperty]
         public Models.Category Category { get; set; } = new();
 
-        public IActionResult OnGet(int? id)
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null) return RedirectToPage("./Index");
-            var category = _categoryRepository.GetCategoryById(id.Value);
+            var category = await _categoryRepository.GetCategoryByIdAsync(id.Value);
             if (category == null) return RedirectToPage("./Index");
             Category = category;
             return Page();
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid) return Page();
-            _categoryRepository.UpdateCategory(Category);
+            if (!ModelState.IsValid)
+            {
+                TempData["ErrorMessage"] = "Please fix the errors in the form.";
+                return Page();
+            }
+            await _categoryRepository.UpdateCategoryAsync(Category);
+            TempData["SuccessMessage"] = "Category updated successfully!";
             return RedirectToPage("./Index");
         }
     }

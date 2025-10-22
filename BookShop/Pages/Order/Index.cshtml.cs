@@ -14,9 +14,9 @@ namespace BookShop.Pages.Order
 
         public List<Models.Order> Orders { get; set; } = new();
 
-        public void OnGet()
+        public async Task OnGetAsync()
         {
-            Orders = _orderRepository.GetAllOrders().ToList();
+            Orders = (await _orderRepository.GetAllOrdersAsync()).ToList();
         }
     }
 }

@@ -12,43 +12,43 @@ namespace BookShop.Services
             _context = context;
         }
 
-        public IEnumerable<Order> GetAllOrders()
+        public async Task<IEnumerable<Order>> GetAllOrdersAsync()
         {
-            return _context.Orders
+            return await _context.Orders.AsNoTracking()
                 .Include(o => o.Customer)
                 .Include(o => o.OrderItems)
                     .ThenInclude(oi => oi.Book)
-                .ToList();
+                .ToListAsync();
         }
 
-        public Order? GetOrderById(int id)
+        public async Task<Order?> GetOrderByIdAsync(int id)
         {
-            return _context.Orders
+            return await _context.Orders.AsNoTracking()
                 .Include(o => o.Customer)
                 .Include(o => o.OrderItems)
                     .ThenInclude(oi => oi.Book)
-                .FirstOrDefault(o => o.OrderId == id);
+                .FirstOrDefaultAsync(o => o.OrderId == id);
         }
 
-        public void AddOrder(Order order)
+        public async Task AddOrderAsync(Order order)
         {
             _context.Orders.Add(order);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void UpdateOrder(Order order)
+        public async Task UpdateOrderAsync(Order order)
         {
             _context.Orders.Update(order);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void DeleteOrder(int id)
+        public async Task DeleteOrderAsync(int id)
         {
-            var order = _context.Orders.Find(id);
+            var order = await _context.Orders.FindAsync(id);
             if (order != null)
             {
                 _context.Orders.Remove(order);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
     }

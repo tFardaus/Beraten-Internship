@@ -10,16 +10,7 @@
     <div class="col-md-4">
         <div id="message" class="alert" style="display:none;"></div>
         <form id="createAuthorForm" method="post">
-            <div class="form-group">
-                <label asp-for="Author.Name" class="control-label"></label>
-                <input asp-for="Author.Name" class="form-control" />
-                <span asp-validation-for="Author.Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Author.Biography" class="control-label"></label>
-                <textarea asp-for="Author.Biography" class="form-control"></textarea>
-                <span asp-validation-for="Author.Biography" class="text-danger"></span>
-            </div>
+            <partial name="_AuthorFormPartial" model="Model.Author" />
             <div class="form-group mt-3">
                 <input type="submit" value="Create" class="btn btn-primary" />
                 <a asp-page="Index" class="btn btn-secondary">Back to List</a>
@@ -35,8 +26,8 @@
                 e.preventDefault();
                 
                 var authorData = {
-                    name: $('#Author_Name').val(),
-                    biography: $('#Author_Biography').val()
+                    name: $('#Name').val(),
+                    biography: $('#Biography').val()
                 };
                 
                 $.ajax({

@@ -16,18 +16,19 @@ namespace BookShop.Pages.Category
         [BindProperty]
         public Models.Category Category { get; set; } = new();
 
-        public IActionResult OnGet(int? id)
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null) return RedirectToPage("./Index");
-            var category = _categoryRepository.GetCategoryById(id.Value);
+            var category = await _categoryRepository.GetCategoryByIdAsync(id.Value);
             if (category == null) return RedirectToPage("./Index");
             Category = category;
             return Page();
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
-            _categoryRepository.DeleteCategory(Category.CategoryId);
+            await _categoryRepository.DeleteCategoryAsync(Category.CategoryId);
+            TempData["SuccessMessage"] = "Category deleted successfully!";
             return RedirectToPage("./Index");
         }
     }

@@ -16,17 +16,17 @@ namespace BookShop.Pages.Book
         public List<Models.Book> Books { get; set; } = new List<Models.Book>();
         public string SearchTerm { get; set; } = string.Empty;
 
-        public void OnGet(string searchTerm)
+        public async Task OnGetAsync(string searchTerm)
         {
             SearchTerm = searchTerm ?? string.Empty;
             
             if (string.IsNullOrWhiteSpace(searchTerm))
             {
-                Books = _bookRepository.GetAllBook().ToList();
+                Books = (await _bookRepository.GetAllBookAsync()).ToList();
             }
             else
             {
-                Books = _bookRepository.SearchBooks(searchTerm).ToList();
+                Books = (await _bookRepository.SearchBooksAsync(searchTerm)).ToList();
             }
         }
     }

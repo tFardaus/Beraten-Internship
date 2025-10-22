@@ -16,18 +16,19 @@ namespace BookShop.Pages.Customer
         [BindProperty]
         public Models.Customer Customer { get; set; } = new();
 
-        public IActionResult OnGet(int? id)
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null) return RedirectToPage("./Index");
-            var customer = _customerRepository.GetCustomerById(id.Value);
+            var customer = await _customerRepository.GetCustomerByIdAsync(id.Value);
             if (customer == null) return RedirectToPage("./Index");
             Customer = customer;
             return Page();
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
-            _customerRepository.DeleteCustomer(Customer.CustomerId);
+            await _customerRepository.DeleteCustomerAsync(Customer.CustomerId);
+            TempData["SuccessMessage"] = "Customer deleted successfully!";
             return RedirectToPage("./Index");
         }
     }

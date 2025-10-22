@@ -21,20 +21,22 @@ namespace BookShop.Pages.Order
 
         public SelectList Customers { get; set; }
 
-        public IActionResult OnGet()
+        public async Task<IActionResult> OnGetAsync()
         {
-            Customers = new SelectList(_customerRepository.GetAllCustomers(), "CustomerId", "Name");
+            Customers = new SelectList(await _customerRepository.GetAllCustomersAsync(), "CustomerId", "Name");
             return Page();
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
-                Customers = new SelectList(_customerRepository.GetAllCustomers(), "CustomerId", "Name");
+                TempData["ErrorMessage"] = "Please fix the errors in the form.";
+                Customers = new SelectList(await _customerRepository.GetAllCustomersAsync(), "CustomerId", "Name");
                 return Page();
             }
-            _orderRepository.AddOrder(Order);
+            await _orderRepository.AddOrderAsync(Order);
+            TempData["SuccessMessage"] = "Order created successfully!";
             return RedirectToPage("./Index");
         }
     }

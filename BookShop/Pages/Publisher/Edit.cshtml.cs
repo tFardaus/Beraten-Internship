@@ -16,19 +16,24 @@ namespace BookShop.Pages.Publisher
         [BindProperty]
         public Models.Publisher Publisher { get; set; } = new();
 
-        public IActionResult OnGet(int? id)
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null) return RedirectToPage("./Index");
-            var publisher = _publisherRepository.GetPublisherById(id.Value);
+            var publisher = await _publisherRepository.GetPublisherByIdAsync(id.Value);
             if (publisher == null) return RedirectToPage("./Index");
             Publisher = publisher;
             return Page();
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid) return Page();
-            _publisherRepository.UpdatePublisher(Publisher);
+            if (!ModelState.IsValid)
+            {
+                TempData["ErrorMessage"] = "Please fix the errors in the form.";
+                return Page();
+            }
+            await _publisherRepository.UpdatePublisherAsync(Publisher);
+            TempData["SuccessMessage"] = "Publisher updated successfully!";
             return RedirectToPage("./Index");
         }
     }

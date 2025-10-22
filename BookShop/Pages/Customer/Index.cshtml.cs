@@ -15,17 +15,17 @@ namespace BookShop.Pages.Customer
         public List<Models.Customer> Customers { get; set; } = new();
         public string SearchTerm { get; set; } = string.Empty;
 
-        public void OnGet(string searchTerm)
+        public async Task OnGetAsync(string searchTerm)
         {
             SearchTerm = searchTerm ?? string.Empty;
             
             if (string.IsNullOrWhiteSpace(searchTerm))
             {
-                Customers = _customerRepository.GetAllCustomers().ToList();
+                Customers = (await _customerRepository.GetAllCustomersAsync()).ToList();
             }
             else
             {
-                Customers = _customerRepository.SearchCustomers(searchTerm).ToList();
+                Customers = (await _customerRepository.SearchCustomersAsync(searchTerm)).ToList();
             }
         }
     }

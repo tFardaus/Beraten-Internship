@@ -16,14 +16,14 @@ namespace BookShop.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var orders = _orderRepository.GetAllOrders();
+            var orders = await _orderRepository.GetAllOrdersAsync();
             return Ok(orders);
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] Order order)
+        public async Task<IActionResult> Create([FromBody] Order order)
         {
             if (!ModelState.IsValid)
             {
@@ -33,7 +33,7 @@ namespace BookShop.Controllers
 
             try
             {
-                _orderRepository.AddOrder(order);
+                await _orderRepository.AddOrderAsync(order);
                 return Ok(new { success = true, message = "Order created successfully!" });
             }
             catch (Exception ex)
@@ -43,7 +43,7 @@ namespace BookShop.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] Order order)
+        public async Task<IActionResult> Update(int id, [FromBody] Order order)
         {
             if (!ModelState.IsValid)
             {
@@ -51,14 +51,14 @@ namespace BookShop.Controllers
             }
 
             order.OrderId = id;
-            _orderRepository.UpdateOrder(order);
+            await _orderRepository.UpdateOrderAsync(order);
             return Ok(new { success = true, message = "Order updated successfully!" });
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            _orderRepository.DeleteOrder(id);
+            await _orderRepository.DeleteOrderAsync(id);
             return Ok(new { success = true, message = "Order deleted successfully!" });
         }
     }

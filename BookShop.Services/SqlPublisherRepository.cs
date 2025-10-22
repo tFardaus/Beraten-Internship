@@ -12,43 +12,43 @@ namespace BookShop.Services
             _context = context;
         }
 
-        public IEnumerable<Publisher> GetAllPublishers()
+        public async Task<IEnumerable<Publisher>> GetAllPublishersAsync()
         {
-            return _context.Publishers.Include(p => p.Books).ToList();
+            return await _context.Publishers.AsNoTracking().Include(p => p.Books).ToListAsync();
         }
 
-        public IEnumerable<Publisher> SearchPublishers(string searchTerm)
+        public async Task<IEnumerable<Publisher>> SearchPublishersAsync(string searchTerm)
         {
-            return _context.Publishers
+            return await _context.Publishers.AsNoTracking()
                 .Include(p => p.Books)
                 .Where(p => p.Name.Contains(searchTerm))
-                .ToList();
+                .ToListAsync();
         }
 
-        public Publisher? GetPublisherById(int id)
+        public async Task<Publisher?> GetPublisherByIdAsync(int id)
         {
-            return _context.Publishers.Include(p => p.Books).FirstOrDefault(p => p.PublisherId == id);
+            return await _context.Publishers.AsNoTracking().Include(p => p.Books).FirstOrDefaultAsync(p => p.PublisherId == id);
         }
 
-        public void AddPublisher(Publisher publisher)
+        public async Task AddPublisherAsync(Publisher publisher)
         {
             _context.Publishers.Add(publisher);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void UpdatePublisher(Publisher publisher)
+        public async Task UpdatePublisherAsync(Publisher publisher)
         {
             _context.Publishers.Update(publisher);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void DeletePublisher(int id)
+        public async Task DeletePublisherAsync(int id)
         {
-            var publisher = _context.Publishers.Find(id);
+            var publisher = await _context.Publishers.FindAsync(id);
             if (publisher != null)
             {
                 _context.Publishers.Remove(publisher);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
     }

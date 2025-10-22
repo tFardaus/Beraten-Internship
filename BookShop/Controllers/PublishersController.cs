@@ -16,26 +16,26 @@ namespace BookShop.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var publishers = _publisherRepository.GetAllPublishers();
+            var publishers = await _publisherRepository.GetAllPublishersAsync();
             return Ok(publishers);
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] Publisher publisher)
+        public async Task<IActionResult> Create([FromBody] Publisher publisher)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _publisherRepository.AddPublisher(publisher);
+            await _publisherRepository.AddPublisherAsync(publisher);
             return Ok(new { success = true, message = "Publisher created successfully!" });
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] Publisher publisher)
+        public async Task<IActionResult> Update(int id, [FromBody] Publisher publisher)
         {
             if (!ModelState.IsValid)
             {
@@ -43,14 +43,14 @@ namespace BookShop.Controllers
             }
 
             publisher.PublisherId = id;
-            _publisherRepository.UpdatePublisher(publisher);
+            await _publisherRepository.UpdatePublisherAsync(publisher);
             return Ok(new { success = true, message = "Publisher updated successfully!" });
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            _publisherRepository.DeletePublisher(id);
+            await _publisherRepository.DeletePublisherAsync(id);
             return Ok(new { success = true, message = "Publisher deleted successfully!" });
         }
     }

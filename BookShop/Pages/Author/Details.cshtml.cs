@@ -17,9 +17,9 @@ namespace BookShop.Pages.Author
         public AuthorWithBooksDto? AuthorInfo { get; set; }
         public List<AuthorWithBooksDto> Books { get; set; } = new();
 
-        public IActionResult OnGet(int id)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
-            var results = _authorRepository.GetAuthorWithBooks(id).ToList();
+            var results = (await _authorRepository.GetAuthorWithBooksAsync(id)).ToList();
 
             if (!results.Any())
             {

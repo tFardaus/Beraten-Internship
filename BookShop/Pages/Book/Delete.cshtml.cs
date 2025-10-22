@@ -17,14 +17,14 @@ namespace BookShop.Pages.Book
         [BindProperty]
         public Models.Book Book { get; set; } = new Models.Book();
 
-        public IActionResult OnGet(int? id)
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
             {
                 return RedirectToPage("./Index");
             }
 
-            var book = _bookRepository.GetBookById(id.Value);
+            var book = await _bookRepository.GetBookByIdAsync(id.Value);
             if (book == null)
             {
                 return RedirectToPage("./Index");
@@ -34,9 +34,10 @@ namespace BookShop.Pages.Book
             return Page();
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
-            _bookRepository.DeleteBook(Book.BookId);
+            await _bookRepository.DeleteBookAsync(Book.BookId);
+            TempData["SuccessMessage"] = "Book deleted successfully!";
             return RedirectToPage("./Index");
         }
     }

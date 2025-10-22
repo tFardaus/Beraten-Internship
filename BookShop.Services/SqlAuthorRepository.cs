@@ -12,52 +12,52 @@ namespace BookShop.Services
             _context = context;
         }
 
-        public IEnumerable<Author> GetAllAuthors()
+        public async Task<IEnumerable<Author>> GetAllAuthorsAsync()
         {
-            return _context.Authors.Include(a => a.Books).ToList();
+            return await _context.Authors.AsNoTracking().Include(a => a.Books).ToListAsync();
+            
         }
 
-        public IEnumerable<Author> SearchAuthors(string searchTerm)
+        public async Task<IEnumerable<Author>> SearchAuthorsAsync(string searchTerm)
         {
-            return _context.Authors
+            return await _context.Authors.AsNoTracking()
                 .Include(a => a.Books)
                 .Where(a => a.Name.Contains(searchTerm))
-                .ToList();
+                .ToListAsync();
         }
 
-        public Author? GetAuthorById(int id)
+        public async Task<Author?> GetAuthorByIdAsync(int id)
         {
-            return _context.Authors.Include(a => a.Books).FirstOrDefault(a => a.AuthorId == id);
+            return await _context.Authors.AsNoTracking().Include(a => a.Books).FirstOrDefaultAsync(a => a.AuthorId == id);
         }
 
-        public void AddAuthor(Author author)
+        public async Task AddAuthorAsync(Author author)
         {
             _context.Authors.Add(author);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void UpdateAuthor(Author author)
+        public async Task UpdateAuthorAsync(Author author)
         {
             _context.Authors.Update(author);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void DeleteAuthor(int id)
+        public async Task DeleteAuthorAsync(int id)
         {
-            var author = _context.Authors.Find(id);
+            var author = await _context.Authors.FindAsync(id);
             if (author != null)
             {
                 _context.Authors.Remove(author);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
 
-        public IEnumerable<AuthorWithBooksDto> GetAuthorWithBooks(int authorId)
+        public async Task<IEnumerable<AuthorWithBooksDto>> GetAuthorWithBooksAsync(int authorId)
         {
-            return _context.AuthorWithBooksResults
-                .FromSqlRaw<AuthorWithBooksDto>(" GetAuthorWithBooks {0}", authorId)
-                .ToList();
-               
+            return await _context.AuthorWithBooksResults
+                .FromSqlRaw<AuthorWithBooksDto>(" GetAuthorWithBooks {0}", authorId).AsNoTracking()
+                .ToListAsync();
         }
     }
 }
