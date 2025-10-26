@@ -1,0 +1,15 @@
+@{
+    var currentSortOrder = ViewData["CurrentSortOrder"]?.ToString() ?? string.Empty;
+    var currentSearchTerm = ViewData["CurrentSearchTerm"]?.ToString() ?? string.Empty;
+}
+
+<form method="get">
+    <input type="hidden" name="searchTerm" value="@currentSearchTerm" />
+    <div class="input-group">
+        <select name="sortOrder" class="form-select" onchange="this.form.submit()">
+            <option value="">Sort by Price</option>
+            <option value="price_asc" selected="@(currentSortOrder == "price_asc")">Price: Low to High</option>
+            <option value="price_desc" selected="@(currentSortOrder == "price_desc")">Price: High to Low</option>
+        </select>
+    </div>
+</form>

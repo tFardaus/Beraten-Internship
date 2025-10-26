@@ -7,16 +7,20 @@
 <h1>Books List</h1>
 <hr />
 <div class="row mb-3">
-    <div class="col-md-6">
+    <div class="col-md-5">
         <form method="get">
+            <input type="hidden" name="sortOrder" value="@Model.SortOrder" />
             <div class="input-group">
-                <input type="text" name="searchTerm" value="@Model.SearchTerm" class="form-control" placeholder="Search by title..." />
+                <input type="text" name="searchTerm" value="@Model.SearchTerm" class="form-control" placeholder="Search by title" />
                 <button type="submit" class="btn btn-primary">Search</button>
                 <a asp-page="./Index" class="btn btn-secondary">Clear</a>
             </div>
         </form>
     </div>
-    <div class="col-md-6 text-end">
+    <div class="col-md-4">
+        @await Component.InvokeAsync("PriceSortFilter", new { currentSortOrder = Model.SortOrder, currentSearchTerm = Model.SearchTerm })
+    </div>
+    <div class="col-md-3 text-end">
         <a asp-page="Create" class="btn btn-success">Create</a>
     </div>
 </div>
@@ -43,6 +47,9 @@
                 <td>@book.Price tk</td>
                 <td>@book.Stock</td>
                 <td>
+                    <form method="post" asp-page-handler="AddToCart" asp-route-id="@book.BookId" style="display:inline;">
+                        <button type="submit" class="btn btn-sm btn-warning">Add to Cart</button>
+                    </form>
                     <a asp-page="./Edit" asp-route-id="@book.BookId" class="btn btn-sm btn-primary">Edit</a>
                     <a asp-page="./Detail" asp-route-id="@book.BookId" class="btn btn-sm btn-success">Details</a>
                     <a asp-page="./Delete" asp-route-id="@book.BookId" class="btn btn-sm btn-danger">Delete</a>
