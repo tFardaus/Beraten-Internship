@@ -32,8 +32,26 @@
         @foreach (var author in Model.Authors)
         {
             <tr class="text-center">
-                <td>@author.Name</td>
-                <td>@author.Biography</td>
+                <td>
+                    @if (Model.AuthorJsonData.ContainsKey(author.AuthorId))
+                    {
+                        <span>@Model.AuthorJsonData[author.AuthorId].Name</span>
+                    }
+                    else
+                    {
+                        <span class="text-muted">No JSON Data</span>
+                    }
+                </td>
+                <td>
+                    @if (Model.AuthorJsonData.ContainsKey(author.AuthorId))
+                    {
+                        <span>@Model.AuthorJsonData[author.AuthorId].Biography</span>
+                    }
+                    else
+                    {
+                        <span class="text-muted">No JSON Data</span>
+                    }
+                </td>
                 <td>
                     <a asp-page="Details" asp-route-id="@author.AuthorId" class="btn btn-sm btn-success">Details</a>
                     <a asp-page="Edit" asp-route-id="@author.AuthorId" class="btn btn-sm btn-primary">Edit</a>

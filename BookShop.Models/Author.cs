@@ -13,5 +13,7 @@ namespace BookShop.Models
         public string Biography { get; set; } = string.Empty;
 
         public ICollection<Book> Books { get; set; } = new List<Book>();
+
+        public string? AuthorDataJson { get; set; }
     }
 }

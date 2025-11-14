@@ -15,5 +15,7 @@ namespace BookShop.Models
         public string Phone { get; set; } = string.Empty;
 
         public ICollection<Book> Books { get; set; } = new List<Book>();
+
+        public string? PublisherDataXml { get; set; }
     }
 }

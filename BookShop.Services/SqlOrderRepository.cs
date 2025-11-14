@@ -14,41 +14,76 @@ namespace BookShop.Services
 
         public async Task<IEnumerable<Order>> GetAllOrdersAsync()
         {
-            return await _context.Orders.AsNoTracking()
-                .Include(o => o.Customer)
-                .Include(o => o.OrderItems)
-                    .ThenInclude(oi => oi.Book)
-                .ToListAsync();
+            try
+            {
+                return await _context.Orders.AsNoTracking()
+                    .Include(o => o.Customer)
+                    .Include(o => o.OrderItems)
+                        .ThenInclude(oi => oi.Book)
+                    .ToListAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task<Order?> GetOrderByIdAsync(int id)
         {
-            return await _context.Orders.AsNoTracking()
-                .Include(o => o.Customer)
-                .Include(o => o.OrderItems)
-                    .ThenInclude(oi => oi.Book)
-                .FirstOrDefaultAsync(o => o.OrderId == id);
+            try
+            {
+                return await _context.Orders.AsNoTracking()
+                    .Include(o => o.Customer)
+                    .Include(o => o.OrderItems)
+                        .ThenInclude(oi => oi.Book)
+                    .FirstOrDefaultAsync(o => o.OrderId == id);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task AddOrderAsync(Order order)
         {
-            _context.Orders.Add(order);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Orders.Add(order);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task UpdateOrderAsync(Order order)
         {
-            _context.Orders.Update(order);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Orders.Update(order);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task DeleteOrderAsync(int id)
         {
-            var order = await _context.Orders.FindAsync(id);
-            if (order != null)
+            try
             {
-                _context.Orders.Remove(order);
-                await _context.SaveChangesAsync();
+                var order = await _context.Orders.FindAsync(id);
+                if (order != null)
+                {
+                    _context.Orders.Remove(order);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
             }
         }
     }

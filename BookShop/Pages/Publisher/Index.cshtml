@@ -33,9 +33,36 @@
         @foreach (var publisher in Model.Publishers)
         {
             <tr class="text-center">
-                <td>@publisher.Name</td>
-                <td>@publisher.Address</td>
-                <td>@publisher.Phone</td>
+                <td>
+                    @if (Model.PublisherXmlData.ContainsKey(publisher.PublisherId))
+                    {
+                        <span>@Model.PublisherXmlData[publisher.PublisherId].Name</span>
+                    }
+                    else
+                    {
+                        <span class="text-muted">No XML Data</span>
+                    }
+                </td>
+                <td>
+                    @if (Model.PublisherXmlData.ContainsKey(publisher.PublisherId))
+                    {
+                        <span>@Model.PublisherXmlData[publisher.PublisherId].Address</span>
+                    }
+                    else
+                    {
+                        <span class="text-muted">No XML Data</span>
+                    }
+                </td>
+                <td>
+                    @if (Model.PublisherXmlData.ContainsKey(publisher.PublisherId))
+                    {
+                        <span>@Model.PublisherXmlData[publisher.PublisherId].Phone</span>
+                    }
+                    else
+                    {
+                        <span class="text-muted">No XML Data</span>
+                    }
+                </td>
                 <td>
                     <a asp-page="Edit" asp-route-id="@publisher.PublisherId" class="btn btn-sm btn-primary">Edit</a>
                     <a asp-page="Delete" asp-route-id="@publisher.PublisherId" class="btn btn-sm btn-danger">Delete</a>

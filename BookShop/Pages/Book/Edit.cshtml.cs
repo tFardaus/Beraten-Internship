@@ -53,7 +53,7 @@ namespace BookShop.Pages.Book
         {
             if (!ModelState.IsValid)
             {
-                TempData["ErrorMessage"] = "Please fix the errors in the form.";
+                TempData["ErrorMessage"] = "Book did not update.";
                 Authors = new SelectList(await _authorRepository.GetAllAuthorsAsync(), "AuthorId", "Name");
                 Categories = new SelectList(await _categoryRepository.GetAllCategoriesAsync(), "CategoryId", "Name");
                 Publishers = new SelectList(await _publisherRepository.GetAllPublishersAsync(), "PublisherId", "Name");

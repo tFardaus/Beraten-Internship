@@ -49,7 +49,7 @@
                                 var cartCount = cart.Sum(c => c.Quantity);
                             }
                             <a class="nav-link text-dark" asp-page="/Cart/Index">
-                                Cart (@cartCount)
+                                Cart
                             </a>
                         </li>
                         @if (User.Identity?.IsAuthenticated == true)

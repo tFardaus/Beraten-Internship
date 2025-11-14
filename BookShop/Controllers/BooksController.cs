@@ -35,6 +35,29 @@ namespace BookShop.Controllers
             }
         }
 
+      
+        
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var books = await _bookRepository.GetAllBookAsync();
+            return Ok(books);
+        }
+
+        
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var book = await _bookRepository.GetBookDetailsAsync(id);
+            if (book == null)
+            {
+                return NotFound(new { message = "Book not found" });
+            }
+            return Ok(book);
+        }
+
+      
+
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] Book book)
         {

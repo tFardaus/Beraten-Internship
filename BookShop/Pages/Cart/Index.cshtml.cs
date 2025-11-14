@@ -1,52 +1,55 @@
 using BookShop.Models;
-using BookShop.Extensions;
+using BookShop.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Security.Claims;
 
 namespace BookShop.Pages.Cart
 {
     public class IndexModel : PageModel
     {
-        public List<CartItem> CartItems { get; set; } = new();
-        public decimal TotalAmount { get; set; }
+        private readonly ICartRepository _cartRepository;
 
-        /// <summary>
-        /// Load cart items from Session
-        /// </summary>
-        public void OnGet()
+        public IndexModel(ICartRepository cartRepository)
         {
-            // Retrieve cart from session
-            CartItems = HttpContext.Session.GetObject<List<CartItem>>("Cart") ?? new List<CartItem>();
-            
-            // Calculate total
+            _cartRepository = cartRepository;
+        }
+
+        public List<CartItemDto> CartItems { get; set; } = new();
+        public decimal TotalAmount { get; set; }
+        public string SearchTerm { get; set; } = string.Empty;
+
+        public async Task OnGetAsync(string searchTerm)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "guest";
+            SearchTerm = searchTerm ?? string.Empty;
+
+            IEnumerable<CartItemDto> items;
+            if (string.IsNullOrWhiteSpace(searchTerm))
+            {
+                items = await _cartRepository.GetCartItemsAsync(userId);
+            }
+            else
+            {
+                items = await _cartRepository.SearchCartItemsAsync(userId, searchTerm);
+            }
+
+            CartItems = items.ToList();
             TotalAmount = CartItems.Sum(item => item.Total);
         }
 
-        /// <summary>
-        /// Remove item from cart
-        /// </summary>
-        public IActionResult OnPostRemove(int bookId)
+        public async Task<IActionResult> OnPostRemoveAsync(int bookId)
         {
-            var cart = HttpContext.Session.GetObject<List<CartItem>>("Cart") ?? new List<CartItem>();
-            
-            // Remove item
-            cart.RemoveAll(c => c.BookId == bookId);
-            
-            // Save back to session
-            HttpContext.Session.SetObject("Cart", cart);
-            
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "guest";
+            await _cartRepository.RemoveFromCartAsync(userId, bookId);
             TempData["SuccessMessage"] = "Item removed from cart!";
             return RedirectToPage();
         }
 
-        /// <summary>
-        /// Clear entire cart
-        /// </summary>
-        public IActionResult OnPostClear()
+        public async Task<IActionResult> OnPostClearAsync()
         {
-            // Remove cart from session
-            HttpContext.Session.Remove("Cart");
-            
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "guest";
+            await _cartRepository.ClearCartAsync(userId);
             TempData["SuccessMessage"] = "Cart cleared!";
             return RedirectToPage();
         }

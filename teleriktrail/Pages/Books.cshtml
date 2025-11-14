@@ -1,0 +1,23 @@
+@page
+@using Kendo.Mvc.UI
+@model teleriktrail.Pages.BooksModel
+@{
+    ViewData["Title"] = "Book List";
+}
+
+<h1>Book List - Telerik Grid</h1>
+<p>Books loaded: @Model.Books.Count</p>
+
+@(Html.Kendo().Grid(Model.Books)
+    .Name("grid")
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.BookId).Width(100);
+        columns.Bound(p => p.BookTitle).Width(250);
+        columns.Bound(p => p.Price).Width(150);
+        columns.Bound(p => p.Stock).Width(100);
+    })
+    .Pageable()
+    .Sortable()
+    .Filterable()
+)

@@ -17,6 +17,7 @@ namespace BookShop.Services
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<Cart> Carts { get; set; }
         public DbSet<AuthorWithBooksDto> AuthorWithBooksResults { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

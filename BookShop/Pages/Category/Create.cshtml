@@ -9,6 +9,7 @@
 <div class="row">
     <div class="col-md-4">
         <div id="message" class="alert" style="display:none;"></div>
+        <div id="autoSaveStatus" class="alert alert-info" style="display:none;"></div>
         <form id="createCategoryForm" method="post">
             <partial name="_CategoryFormPartial" model="Model.Category" />
             <div class="form-group mt-3">
@@ -21,9 +22,56 @@
 
 @section Scripts {
     <script>
+        let autoSaveTimer = null;
+
+        function checkAllFieldsFilled() {
+            const name = $('#Name').val();
+            const description = $('#Description').val();
+            return name && description;
+        }
+
+        function autoSave() {
+            $('#autoSaveStatus').text('Saving').show();
+
+            $.ajax({
+                url: '/api/categories',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    name: $('#Name').val(),
+                    description: $('#Description').val()
+                }),
+                success: function(response) {
+                    const now = new Date().toLocaleTimeString();
+                    $('#autoSaveStatus').text('Saved at ' + now).removeClass('alert-warning').addClass('alert-success');
+                },
+               
+            });
+        }
+
+        function resetAutoSaveTimer() {
+            if (autoSaveTimer) {
+                clearTimeout(autoSaveTimer);
+            }
+
+            if (checkAllFieldsFilled()) {
+                $('#autoSaveStatus').text('saving in 4 seconds').removeClass('alert-success alert-danger').addClass('alert-warning').show();
+                autoSaveTimer = setTimeout(autoSave, 4000);
+            } else {
+                $('#autoSaveStatus').hide();
+            }
+        }
+
         $(document).ready(function() {
+            $('#Name, #Description').on('input', resetAutoSaveTimer);
+
             $('#createCategoryForm').on('submit', function(e) {
                 e.preventDefault();
+                
+                if (autoSaveTimer) {
+                    clearTimeout(autoSaveTimer);
+                }
+
                 $.ajax({
                     url: '/api/categories',
                     type: 'POST',
@@ -35,6 +83,7 @@
                     success: function(response) {
                         $('#message').removeClass('alert-danger').addClass('alert-success').text(response.message).show();
                         $('#createCategoryForm')[0].reset();
+                        $('#autoSaveStatus').hide();
                     },
                     error: function() {
                         $('#message').removeClass('alert-success').addClass('alert-danger').text('Error creating category.').show();

@@ -11,13 +11,32 @@ builder.Services.AddRazorPages(options =>
     options.Conventions.AuthorizeFolder("/");
     options.Conventions.AllowAnonymousToFolder("/Account");
 });
-builder.Services.AddControllers();
 
-// Session Configuration
-builder.Services.AddDistributedMemoryCache(); // Stores session data in memory
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    });
+
+// For client app
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowClient", policy =>
+    {
+        policy.WithOrigins("https://localhost:7001", "http://localhost:5002", "https://localhost:7075", "http://localhost:5255")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+// Caching
+builder.Services.AddMemoryCache();
+
+// Session 
+builder.Services.AddDistributedMemoryCache(); // Session data in memory
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(1); 
+    options.IdleTimeout = TimeSpan.FromMinutes(60); 
     options.Cookie.HttpOnly = true; 
     options.Cookie.IsEssential = true; 
 });
@@ -42,6 +61,7 @@ builder.Services.AddScoped<ICategoryRepository, SqlCategoryRepository>();
 builder.Services.AddScoped<IPublisherRepository, SqlPublisherRepository>();
 builder.Services.AddScoped<ICustomerRepository, SqlCustomerRepository>();
 builder.Services.AddScoped<IOrderRepository, SqlOrderRepository>();
+builder.Services.AddScoped<ICartRepository, SqlCartRepository>();
 
 var app = builder.Build();
 
@@ -57,6 +77,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseCors("AllowClient");
 
 app.UseSession(); 
 

@@ -1,6 +1,7 @@
 using BookShop.Models;
 using BookShop.Services;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Text.Json;
 
 namespace BookShop.Pages.Author
 {
@@ -15,6 +16,7 @@ namespace BookShop.Pages.Author
 
         public List<Models.Author> Authors { get; set; } = new List<Models.Author>();
         public string SearchTerm { get; set; } = string.Empty;
+        public Dictionary<int, AuthorData> AuthorJsonData { get; set; } = new();
 
         public async Task OnGetAsync(string searchTerm)
         {
@@ -28,6 +30,24 @@ namespace BookShop.Pages.Author
             {
                 Authors = (await _authorRepository.SearchAuthorsAsync(searchTerm)).ToList();
             }
+
+            foreach (var author in Authors)
+            {
+                if (!string.IsNullOrEmpty(author.AuthorDataJson))
+                {
+                    var data = JsonSerializer.Deserialize<AuthorData>(author.AuthorDataJson);
+                    if (data != null)
+                    {
+                        AuthorJsonData[author.AuthorId] = data;
+                    }
+                }
+            }
         }
+    }
+
+    public class AuthorData
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Biography { get; set; } = string.Empty;
     }
 }

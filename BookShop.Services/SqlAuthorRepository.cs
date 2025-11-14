@@ -1,63 +1,163 @@
 using BookShop.Models;
 using Microsoft.EntityFrameworkCore;
+using BookShop.Services.Extensions;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace BookShop.Services
 {
     public class SqlAuthorRepository : IAuthorRepository
     {
-        private readonly AppDbContext _context;
+        private readonly AppDbContext context;
+        private readonly IMemoryCache _cache;
 
-        public SqlAuthorRepository(AppDbContext context)
+        public SqlAuthorRepository(AppDbContext context, IMemoryCache cache)
         {
-            _context = context;
+            this.context = context;
+            _cache = cache;
         }
 
         public async Task<IEnumerable<Author>> GetAllAuthorsAsync()
         {
-            return await _context.Authors.AsNoTracking().Include(a => a.Books).ToListAsync();
-            
+            if (_cache.TryGetValue("all_authors", out IEnumerable<Author>? authors))
+            {
+                return authors!;
+            }
+
+            try
+            {
+                authors = await this.context.Authors.AsNoTracking().Include(a => a.Books).ToListAsync();
+                
+                var cacheOptions = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1),
+                    SlidingExpiration = TimeSpan.FromMinutes(5)
+                };
+                _cache.Set("all_authors", authors, cacheOptions);
+                return authors;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task<IEnumerable<Author>> SearchAuthorsAsync(string searchTerm)
         {
-            return await _context.Authors.AsNoTracking()
-                .Include(a => a.Books)
-                .Where(a => a.Name.Contains(searchTerm))
-                .ToListAsync();
+            try
+            {
+                return await this.context.Authors.AsNoTracking()
+                    .Include(a => a.Books)
+                    .Where(a => a.Name.Contains(searchTerm))
+                    .ToListAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task<Author?> GetAuthorByIdAsync(int id)
         {
-            return await _context.Authors.AsNoTracking().Include(a => a.Books).FirstOrDefaultAsync(a => a.AuthorId == id);
+            try
+            {
+                return await this.context.Authors.AsNoTracking().Include(a => a.Books).FirstOrDefaultAsync(a => a.AuthorId == id);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task AddAuthorAsync(Author author)
         {
-            _context.Authors.Add(author);
-            await _context.SaveChangesAsync();
+            try
+            {
+                author.AuthorDataJson = author.ToJson();
+                author.Name = string.Empty;
+                author.Biography = string.Empty;
+                
+                this.context.Authors.Add(author);
+                await this.context.SaveChangesAsync();
+                
+                _cache.Remove("all_authors");
+                var authors = await this.context.Authors.AsNoTracking().Include(a => a.Books).ToListAsync();
+                var cacheOptions = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1),
+                    SlidingExpiration = TimeSpan.FromMinutes(20)
+                };
+                _cache.Set("all_authors", authors, cacheOptions);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task UpdateAuthorAsync(Author author)
         {
-            _context.Authors.Update(author);
-            await _context.SaveChangesAsync();
+            try
+            {
+                author.AuthorDataJson = author.ToJson();
+                author.Name = string.Empty;
+                author.Biography = string.Empty;
+                
+                this.context.Authors.Update(author);
+                await this.context.SaveChangesAsync();
+                
+                _cache.Remove("all_authors");
+                var authors = await this.context.Authors.AsNoTracking().Include(a => a.Books).ToListAsync();
+                var cacheOptions = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1),
+                    SlidingExpiration = TimeSpan.FromMinutes(20)
+                };
+                _cache.Set("all_authors", authors, cacheOptions);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task DeleteAuthorAsync(int id)
         {
-            var author = await _context.Authors.FindAsync(id);
-            if (author != null)
+            try
             {
-                _context.Authors.Remove(author);
-                await _context.SaveChangesAsync();
+                var author = await this.context.Authors.FindAsync(id);
+                if (author != null)
+                {
+                    this.context.Authors.Remove(author);
+                    await this.context.SaveChangesAsync();
+                    
+                    _cache.Remove("all_authors");
+                    var authors = await this.context.Authors.AsNoTracking().Include(a => a.Books).ToListAsync();
+                    var cacheOptions = new MemoryCacheEntryOptions
+                    {
+                        AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1),
+                        SlidingExpiration = TimeSpan.FromMinutes(20)
+                    };
+                    _cache.Set("all_authors", authors, cacheOptions);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
             }
         }
 
         public async Task<IEnumerable<AuthorWithBooksDto>> GetAuthorWithBooksAsync(int authorId)
         {
-            return await _context.AuthorWithBooksResults
-                .FromSqlRaw<AuthorWithBooksDto>(" GetAuthorWithBooks {0}", authorId).AsNoTracking()
-                .ToListAsync();
+            try
+            {
+                return await this.context.AuthorWithBooksResults
+                    .FromSqlRaw<AuthorWithBooksDto>(" GetAuthorWithBooks {0}", authorId).AsNoTracking()
+                    .ToListAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

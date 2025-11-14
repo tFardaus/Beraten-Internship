@@ -1,5 +1,6 @@
 using BookShop.Services;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using BookShop.Services.Extensions;
 
 namespace BookShop.Pages.Publisher
 {
@@ -14,6 +15,7 @@ namespace BookShop.Pages.Publisher
 
         public List<Models.Publisher> Publishers { get; set; } = new();
         public string SearchTerm { get; set; } = string.Empty;
+        public Dictionary<int, PublisherData> PublisherXmlData { get; set; } = new();
 
         public async Task OnGetAsync(string searchTerm)
         {
@@ -27,6 +29,27 @@ namespace BookShop.Pages.Publisher
             {
                 Publishers = (await _publisherRepository.SearchPublishersAsync(searchTerm)).ToList();
             }
+
+            foreach (var publisher in Publishers)
+            {
+                if (!string.IsNullOrEmpty(publisher.PublisherDataXml))
+                {
+                    var (name, address, phone) = publisher.PublisherDataXml.ParsePublisherXml();
+                    PublisherXmlData[publisher.PublisherId] = new PublisherData
+                    {
+                        Name = name,
+                        Address = address,
+                        Phone = phone
+                    };
+                }
+            }
         }
+    }
+
+    public class PublisherData
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Address { get; set; } = string.Empty;
+        public string Phone { get; set; } = string.Empty;
     }
 }
